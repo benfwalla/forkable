@@ -18,7 +18,7 @@ was reverse engineered from the web app. API notes are in [docs/SCHEMA.md](docs/
 With [uv](https://docs.astral.sh/uv/) (`brew install uv`):
 
 ```bash
-uv tool install git+https://github.com/<you>/forkable.git   # puts `forkable` on your PATH
+uv tool install git+https://github.com/benfwalla/forkable.git   # puts `forkable` on your PATH
 uv tool upgrade forkable-cli                                # later, to update
 ```
 
