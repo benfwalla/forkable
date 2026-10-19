@@ -11,8 +11,6 @@ An unofficial Python client and CLI for [Forkable](https://forkable.com) workpla
 It uses only the Python standard library (Python 3.9+). It works with any Forkable account and
 was reverse engineered from the web app. API notes are in [docs/SCHEMA.md](docs/SCHEMA.md).
 
-> Not affiliated with Forkable. The API is undocumented and may change without notice.
-
 ## CLI
 
 First [install](#install) and [log in](#log-in).
