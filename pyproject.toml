@@ -1,0 +1,30 @@
+[project]
+name = "forkable-cli"
+version = "0.1.0"
+description = "Unofficial client and CLI for Forkable meal ordering"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+forkable = "forkable.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "forkable"
+module-root = ""
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I"]
