@@ -16,35 +16,29 @@ was reverse engineered from the web app. API notes are in [docs/SCHEMA.md](docs/
 First [install](#install) and [log in](#log-in).
 
 ```bash
-forkable whoami                 # your locations (ids), default location per weekday, auto-order setting
-forkable week                   # this week's meals (next week's on weekends)
-forkable week 2026-11-02        # the week containing that date
-forkable day 2026-11-05         # that day's meal(s) + every location's delivery (ids, lunch/dinner)
-forkable menu 2026-11-05        # restaurants + items with ids, prices, ratings, capacity, SOLD OUT
-forkable menu 2026-11-05 -v     # ...including descriptions and every customization option
-forkable menu 2026-11-05 --club 1234        # a different location's menu
-forkable item 2026-11-05 <menu_id> <item_id>    # one item's customization options
-```
+# Browse
+forkable whoami                               # locations, default per weekday, auto-order
+forkable week [DATE]                          # the week's meals (next week on weekends)
+forkable day DATE                             # that day's meals + every location's delivery
+forkable menu DATE [-v] [--club ID]           # items, prices, SOLD OUT (-v: options too)
+forkable item DATE MENU_ID ITEM_ID            # one item's customization options
 
-Setting a meal:
+# Order (replaces your meal, or adds one if you have none; --dry-run to preview)
+forkable order DATE MENU_ID ITEM_ID --opt bread=multigrain --opt "sides=brussel,sweet potato"
+forkable order DATE MENU_ID ITEM_ID --note "No onions, please"
+forkable order DATE MENU_ID ITEM_ID --club ID     # move to another location that day
+forkable order DATE MENU_ID ITEM_ID --add         # extra meal instead of replacing
 
-```bash
-# Replace your meal that day (or add one if you have none). Options are matched by id or
-# case-insensitive name; errors list the valid choices.
-forkable order 2026-11-05 <menu_id> <item_id> --opt bread=multigrain --opt toasted=toasted --dry-run
-forkable order 2026-11-05 <menu_id> <item_id> --opt "sides=brussel,sweet potato" --note "No onions, please"
-
-forkable order 2026-11-05 <menu_id> <item_id> --club 1234   # switch to another location for that day
-forkable order 2026-11-05 <menu_id> <item_id> --add         # add an extra meal instead of replacing
-
-forkable note 2026-11-05 "No onions, please"   # change instructions ("" clears)
-forkable dont-order 2026-11-05                 # Order / Don't order toggle (keeps the selection)
-forkable confirm 2026-11-05
-forkable skip 2026-11-05 --dry-run             # remove the meal entirely
+# Adjust
+forkable note DATE "No onions, please"        # "" clears
+forkable dont-order DATE                      # keep the meal, but don't order it
+forkable confirm DATE                         # order it
+forkable skip DATE                            # remove the meal
 ```
 
 Notes:
 
+- `--opt` matches options by id or by name (case-insensitive); errors list the valid choices.
 - If you have several meals on a day, `day` shows short ids. Pass one with `--piece <id>`.
 - If a location has both lunch and dinner, use `--window dinner`. `--delivery <id>` picks an exact delivery.
 - Put `--json` before the command for raw output: `forkable --json week`.
