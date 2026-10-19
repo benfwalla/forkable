@@ -16,33 +16,47 @@ was reverse engineered from the web app. API notes are in [docs/SCHEMA.md](docs/
 First [install](#install) and [log in](#log-in).
 
 ```bash
-# Browse
+# Account
+forkable login                                # reuse your browser's Forkable login (see Log in)
+forkable set-session                          # or paste the session cookie
 forkable whoami                               # locations, default per weekday, auto-order
-forkable week [DATE]                          # the week's meals (next week on weekends)
-forkable day DATE                             # that day's meals + every location's delivery
-forkable menu DATE [-v] [--club ID]           # items, prices, SOLD OUT (-v: options too)
-forkable item DATE MENU_ID ITEM_ID            # one item's customization options
+forkable logout
 
-# Order (replaces your meal, or adds one if you have none; --dry-run to preview)
-forkable order DATE MENU_ID ITEM_ID --opt bread=multigrain --opt "sides=brussel,sweet potato"
-forkable order DATE MENU_ID ITEM_ID --note "No onions, please"
-forkable order DATE MENU_ID ITEM_ID --club ID     # move to another location that day
-forkable order DATE MENU_ID ITEM_ID --add         # extra meal instead of replacing
+# Browse
+forkable week [<date>]                        # the week's meals (next week on weekends)
+forkable day <date>                           # that day's meals + every location's delivery
+forkable menu <date> [-v]                     # items, prices, SOLD OUT (-v: descriptions, options)
+forkable item <date> <menu_id> <item_id>      # one item's customization options
 
-# Adjust
-forkable note DATE "No onions, please"        # "" clears
-forkable dont-order DATE                      # keep the meal, but don't order it
-forkable confirm DATE                         # order it
-forkable skip DATE                            # remove the meal
+# Order: replaces your meal that day, or adds one if you have none
+forkable order <date> <menu_id> <item_id> --opt bread=multigrain --opt "sides=brussel,sweet potato"
+forkable order <date> <menu_id> <item_id> --note "No onions, please"
+forkable order <date> <menu_id> <item_id> --add     # extra meal instead of replacing
+forkable order <date> <menu_id> <item_id> -n        # dry run: show the plan, change nothing
+
+# Adjust a day
+forkable note <date> "No onions, please"      # "" clears
+forkable dont-order <date>                    # keep the meal, but don't order it (alias: unconfirm)
+forkable confirm <date>                       # order it
+forkable skip <date> [-n]                     # remove the meal
 ```
+
+Dates are `YYYY-MM-DD`. Shared flags:
+
+| Flag | Commands | Use |
+|---|---|---|
+| `--club <id>` | `menu`, `item`, `order` | Another location (ids from `whoami`). With `order`, moves your meal there. |
+| `--window <name>` | `menu`, `item`, `order` | `lunch` or `dinner`, when a location has both. |
+| `--delivery <id>` | `menu`, `item`, `order` | An exact delivery (ids from `day`). |
+| `--piece <id>` | `order`, `note`, `confirm`, `dont-order`, `skip` | Which meal, if you have several that day (short ids from `day`). |
+| `--json` | all (before the command) | Raw JSON: `forkable --json week`. |
 
 Notes:
 
-- `--opt` matches options by id or by name (case-insensitive); errors list the valid choices.
-- If you have several meals on a day, `day` shows short ids. Pass one with `--piece <id>`.
-- If a location has both lunch and dinner, use `--window dinner`. `--delivery <id>` picks an exact delivery.
-- Put `--json` before the command for raw output: `forkable --json week`.
+- `--opt <modifier>=<option>` matches by id or by name (case-insensitive); errors list the valid choices.
+  Separate several options with commas.
 - `order` keeps the replaced meal's note unless you pass `--note`.
+- `forkable <command> --help` lists every option.
 
 ### Order vs. Don't order, and suggested meals
 
@@ -81,7 +95,8 @@ forkable login
 
 On a Mac this finds your Forkable login in whichever browser you use and copies the session (the most
 recently used one, if you're logged in in several). On Windows or Linux, copy the cookie by hand (below).
-`--browser chrome|brave|edge|arc|chromium|firefox|safari` picks one, and `--profile "Work"` picks a profile.
+`--browser chrome|brave|edge|arc|chromium|firefox|safari` picks one, and `--profile "Work"` picks a profile;
+`-y` skips the confirmation.
 
 | Browser | What happens |
 |---|---|
